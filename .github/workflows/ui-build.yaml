@@ -1,0 +1,19 @@
+name: Build React App
+on:
+  push:
+    paths:
+      - 'matiushin_medvedev/ui/**'
+jobs:
+  build_docker_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./matiushin_medvedev/ui/
+          push: false
+          tags: test-image:latest
+          file: ./matiushin_medvedev/ui/Dockerfile
+

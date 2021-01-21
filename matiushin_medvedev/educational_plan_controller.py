@@ -69,7 +69,7 @@ def delete_educational_plan(educational_plan):
 def get_educational_plan_gradebook_data(educational_plan):
     return convert_to_json({
         'educational_plan': educational_plan,
-        'hours': 12,
+        'discipline': 'discipline',
         'gradebooks': [
             {
                 'year': 2021,

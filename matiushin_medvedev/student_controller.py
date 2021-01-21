@@ -16,7 +16,7 @@ def create_student():
         'entry_date': request_body['entry_date'],
         'education_form': request_body['education_form'],
         'group_num': request_body['group_num'],
-    })
+    }), 201
 
 
 @student_controller.route('/students/', methods=['GET'])
@@ -58,7 +58,7 @@ def get_student(student_id):
 
 @student_controller.route('/students/<student_id>', methods=['PUT'])
 def update_student(student_id):
-    request_body = request.get_json()
+    request_body = request.json
     return convert_to_json({
         'id': student_id,
         'name': request_body['name'],
@@ -72,7 +72,7 @@ def update_student(student_id):
 
 @student_controller.route('/students/<student_id>', methods=['DELETE'])
 def delete_student(student_id):
-    return
+    return '', 204
 
 
 @student_controller.route('/students/count', methods=['GET'])

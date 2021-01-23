@@ -9,3 +9,6 @@ app.register_blueprint(student_controller)
 app.register_blueprint(educational_plan_controller)
 app.register_blueprint(gradebook_controller)
 
+
+if __name__ == 'main':
+    app.run()

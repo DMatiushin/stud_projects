@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_api import status
 
 from matiushin_medvedev.controller_utils import convert_to_json
 
@@ -13,4 +14,4 @@ def set_mark():
         'discipline_name':  request_body['discipline_id'],
         'year':  request_body['year'],
         'mark':  request_body['mark']
-    }), 201
+    }), status.HTTP_201_CREATED

@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from flask_api import status
 
 from matiushin_medvedev.controller_utils import convert_to_json
 
@@ -16,7 +17,7 @@ def create_student():
         'entry_date': request_body['entry_date'],
         'education_form': request_body['education_form'],
         'group_num': request_body['group_num'],
-    }), 201
+    }), status.HTTP_201_CREATED
 
 
 @student_controller.route('/students/', methods=['GET'])
@@ -72,7 +73,7 @@ def update_student(student_id):
 
 @student_controller.route('/students/<student_id>', methods=['DELETE'])
 def delete_student(student_id):
-    return '', 204
+    return '', status.HTTP_204_NO_CONTENT
 
 
 @student_controller.route('/students/count', methods=['GET'])

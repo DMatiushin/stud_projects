@@ -1,6 +1,6 @@
 import enum
 
-from matiushin_medvedev import db
+from matiushin_medvedev.backend.db.db_config import db
 
 
 class EducationForm(enum.Enum):

@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_api import status
 
-from matiushin_medvedev.web.controller_utils import convert_to_json
+from matiushin_medvedev.backend.web.controller_utils import convert_to_json
 
 educational_plan_controller = Blueprint('educational_plan_controller', __name__)
 

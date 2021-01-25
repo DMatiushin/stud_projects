@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from flask_api import status
 
-from matiushin_medvedev import db
-from matiushin_medvedev.student import Student
-from matiushin_medvedev.web.controller_utils import convert_to_json
+from matiushin_medvedev.backend import db
+from matiushin_medvedev.backend.db.student import Student
+from matiushin_medvedev.backend.web.controller_utils import convert_to_json
 
 student_controller = Blueprint('student_controller', __name__)
 

@@ -37,7 +37,7 @@
 `pip install -r requriments.txt`
 
 Для старта приложения необходимо добавить FLASK_APP в переменные среды
-`set FLASK_APP=__init__.py` (Windows)
+`set FLASK_APP=backend/__init__.py` (Windows)
 затем запустить приложение при помощи 
 `flask run`
 Дефолтный порт - 5000

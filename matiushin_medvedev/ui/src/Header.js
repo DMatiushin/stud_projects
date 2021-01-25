@@ -13,7 +13,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
-import {BrowserRouter, useLocation} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
+import {menuItems} from './routerSettings';
+import * as path from "path";
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -40,8 +42,11 @@ const styles = (theme) => ({
 });
 
 function Header(props) {
-
     const {classes, onDrawerToggle} = props;
+
+    const location = useLocation();
+    const pathname = location.pathname;
+    const title = menuItems.filter(item => item.path === pathname)[0].id;
 
     return (
         <React.Fragment>
@@ -85,9 +90,7 @@ function Header(props) {
                     <Grid container alignItems="center" spacing={1}>
                         <Grid item xs>
                             <Typography color="inherit" variant="h5" component="h1">
-                                <BrowserRouter>
-                                    <Title/>
-                                </BrowserRouter>
+                                {title}
                             </Typography>
                         </Grid>
                         <Grid item>
@@ -114,14 +117,6 @@ function Header(props) {
             >
             </AppBar>
         </React.Fragment>
-    );
-}
-
-function Title(props) {
-    const location = useLocation();
-    const pathname = location.pathname;
-    return(
-        <div>{pathname}</div>
     );
 }
 

@@ -5,7 +5,7 @@ import {createMuiTheme, ThemeProvider, withStyles} from '@material-ui/core/style
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import Navigator from './Navigator';
-import Students from './Students';
+import Students from './students/Students';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Content from './Content';
 
@@ -39,7 +39,7 @@ let theme = createMuiTheme({
     },
 });
 
-let theme2 = {
+theme = {
     ...theme,
     overrides: {
         MuiDrawer: {
@@ -129,37 +129,37 @@ function App(props) {
         setMobileOpen(!mobileOpen);
     };
     return (
-        <ThemeProvider theme={theme2}>
-            <div className={classes.root}>
-                <CssBaseline/>
-                <nav className={classes.drawer}>
-                    <Hidden smUp implementation="js">
-                        <Navigator
-                            PaperProps={{style: {width: drawerWidth}}}
-                            variant="temporary"
-                            open={mobileOpen}
-                            onClose={handleDrawerToggle}
-                        />
-                    </Hidden>
-                    <Hidden xsDown implementation="css">
-                        <Navigator PaperProps={{style: {width: drawerWidth}}}/>
-                    </Hidden>
-                </nav>
-                <div className={classes.app}>
-                    <Header onDrawerToggle={handleDrawerToggle}/>
-                    <main className={classes.main}>
-                        <BrowserRouter>
+        <ThemeProvider theme={theme}>
+            <BrowserRouter>
+                <div className={classes.root}>
+                    <CssBaseline/>
+                    <nav className={classes.drawer}>
+                        <Hidden smUp implementation="js">
+                            <Navigator
+                                PaperProps={{style: {width: drawerWidth}}}
+                                variant="temporary"
+                                open={mobileOpen}
+                                onClose={handleDrawerToggle}
+                            />
+                        </Hidden>
+                        <Hidden xsDown implementation="css">
+                            <Navigator PaperProps={{style: {width: drawerWidth}}}/>
+                        </Hidden>
+                    </nav>
+                    <div className={classes.app}>
+                        <Header onDrawerToggle={handleDrawerToggle}/>
+                        <main className={classes.main}>
                             <Switch>
                                 <Route exact={true} path={"/"} component={Students}/>
                                 <Route exact={false} path={"/url1"} component={Content}/>
                             </Switch>
-                        </BrowserRouter>
-                    </main>
-                    <footer className={classes.footer}>
+                        </main>
+                        <footer className={classes.footer}>
 
-                    </footer>
+                        </footer>
+                    </div>
                 </div>
-            </div>
+            </BrowserRouter>
         </ThemeProvider>
     );
 }

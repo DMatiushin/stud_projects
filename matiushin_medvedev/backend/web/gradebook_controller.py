@@ -15,8 +15,8 @@ def set_mark():
     request_body = request.json
     student = Student.query.get_or_404(request_body['student_id'])
     educational_plan = EducationalPlan.query.get_or_404(request_body['educational_plan_id'])
-    gradebook = Gradebook(student_id=student.id,
-                          educational_plan_id=educational_plan.id,
+    gradebook = Gradebook(student=student,
+                          educational_plan=educational_plan,
                           year=request_body['year'],
                           mark=request_body['mark'])
     db.session.add(gradebook)
@@ -28,7 +28,7 @@ def set_mark():
 def update_mark():
     request_body = request.json
     gradebook = Gradebook.query.filter_by(student_id=request_body['student_id'],
-                                      educational_plan_id=request_body['educational_plan_id']).first()
+                                          educational_plan_id=request_body['educational_plan_id']).first()
     if gradebook is None:
         return '', status.HTTP_404_NOT_FOUND
     gradebook.year = request_body['year']

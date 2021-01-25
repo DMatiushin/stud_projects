@@ -19,7 +19,7 @@ class EducationalPlan(db.Model):
     discipline = db.Column(db.String(255))
     hours = db.Column(db.Integer())
     examination_form = db.Column(db.Enum(ExaminationForm))
-    marks = db.relationship("Gradebook", backref="educational_plan", lazy=True)
+    gradebooks = db.relationship("Gradebook", backref="educational_plan")
 
     def __init__(self, spec_name, discipline, hours, examination_form):
         self.spec_name = spec_name

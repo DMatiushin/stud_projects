@@ -1,3 +1,5 @@
+import collections
+
 from flask import Blueprint, request
 from flask_api import status
 
@@ -53,26 +55,29 @@ def delete_educational_plan(educational_plan):
     return '', status.HTTP_204_NO_CONTENT
 
 
-@educational_plan_controller.route('/educational_plans/<educational_plan>/gradebooks', methods=['GET'])
-def get_educational_plan_gradebook_data(educational_plan):
+@educational_plan_controller.route('/educational_plans/<educational_plan_id>/gradebooks', methods=['GET'])
+def get_educational_plan_gradebook_data(educational_plan_id):
+    result_set = db.session.execute("SELECT s.surname     as surname,\n"
+                                    "       ep.discipline as discipline,\n"
+                                    "       g.year        as year,\n"
+                                    "       g.mark        as mark\n"
+                                    "FROM educational_plan as ep\n"
+                                    "         LEFT JOIN gradebook g on ep.id = g.educational_plan_id\n"
+                                    "         LEFT JOIN student s on s.id = g.student_id\n"
+                                    "WHERE ep.id = :educational_plan_id",
+                                    {'educational_plan_id': educational_plan_id})
+    discipline = ''
+    years_to_marks = collections.defaultdict(list)
+    for row in result_set:
+        discipline = row.discipline
+        years_to_marks[row.year].append({
+            'surname': row.surname,
+            'mark': row.mark
+        })
+    gradebooks = [{'year': year, 'students_marks': marks} for year, marks in years_to_marks.items()]
     return convert_to_json({
-        'educational_plan': educational_plan,
-        'discipline': 'discipline',
-        'gradebooks': [
-            {
-                'year': 2021,
-                'students_marks': [
-                    {
-                        'surname': 'surname',
-                        'mark': 4,
-                    },
-                    {
-                        'surname': 'surname2',
-                        'mark': 5,
-                    }
-                ]
-            }
-        ]
+        'discipline': discipline,
+        'gradebooks': gradebooks
     })
 
 

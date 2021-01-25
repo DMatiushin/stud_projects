@@ -7,17 +7,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import PeopleIcon from '@material-ui/icons/People';
-import DnsRoundedIcon from '@material-ui/icons/DnsRounded';
-import PermMediaOutlinedIcon from '@material-ui/icons/PhotoSizeSelectActual';
-import {BrowserRouter, useHistory, useLocation} from 'react-router-dom';
+import {useHistory, useLocation} from 'react-router-dom';
+import {menuItems} from './routerSettings';
 
-
-const menuItems = [
-    {id: 'Students', icon: <PeopleIcon/>, path: '/'},
-    {id: 'Database', icon: <DnsRoundedIcon/>, path: '/url1'},
-    {id: 'Storage', icon: <PermMediaOutlinedIcon/>, path: '/url2'},
-];
 
 const styles = (theme) => ({
     categoryHeader: {
@@ -69,19 +61,17 @@ function Navigator(props) {
                 <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
                     Paperbase
                 </ListItem>
-                <BrowserRouter>
-                    <React.Fragment>
-                        {menuItems.map(({id: menuId, icon, active, path}) => (
-                            <Item
-                                classes={classes}
-                                icon={icon}
-                                menuId={menuId}
-                                path={path}
-                                key={menuId}
-                            />
-                        ))}
-                    </React.Fragment>
-                </BrowserRouter>
+                <React.Fragment>
+                    {menuItems.map(({id: menuId, icon, path}) => (
+                        <Item
+                            classes={classes}
+                            icon={icon}
+                            menuId={menuId}
+                            path={path}
+                            key={menuId}
+                        />
+                    ))}
+                </React.Fragment>
             </List>
         </Drawer>
     );

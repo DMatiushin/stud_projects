@@ -11,7 +11,23 @@ def set_mark():
     request_body = request.json
     return convert_to_json({
         'student_surname': request_body['student_id'],
-        'discipline_name':  request_body['discipline_id'],
-        'year':  request_body['year'],
-        'mark':  request_body['mark']
+        'discipline_name': request_body['discipline_id'],
+        'year': request_body['year'],
+        'mark': request_body['mark']
     }), status.HTTP_201_CREATED
+
+
+@gradebook_controller.route('/gradebooks/', methods=['PUT'])
+def update_mark():
+    request_body = request.json
+    return convert_to_json({
+        'student_surname': request_body['student_id'],
+        'discipline_name': request_body['discipline_id'],
+        'year': request_body['year'],
+        'mark': request_body['mark']
+    })
+
+
+@gradebook_controller.route('/gradebooks/', methods=['DELETE'])
+def remove_mark():
+    return '', 204

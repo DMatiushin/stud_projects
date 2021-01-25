@@ -74,6 +74,6 @@ def get_student_response(student):
         'surname': student.surname,
         'patronymic': student.patronymic,
         'entry_date': student.entry_date,
-        'education_form': student.examination_form,
+        'education_form': student.education_form,
         'group_num': student.group_num
     }

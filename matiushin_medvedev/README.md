@@ -59,13 +59,8 @@
 
 Для остановки  `docker-compose down`
 
-Перед стартом установить зависимости
-`pip install -r requriments.txt`
+Для сборки образа (при наличии уже собранного) `docker-compose build`
 
-Для старта приложения необходимо добавить FLASK_APP в переменные среды
-`set FLASK_APP=backend/__init__.py` (Windows)
-затем запустить приложение при помощи 
-`flask run`
 Дефолтный порт - 5000
 
 [↑↑↑↑↑↑↑](#top)

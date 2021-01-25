@@ -1,10 +1,19 @@
-postgres:
-  container_name: postgresql
-  image: postgres:11
-  ports:
-    - "5432:5432"
-  environment:
-    - POSTGRES_USER=education
-    - POSTGRES_PASSWORD=password
-  volumes:
-    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+version: '3.0'
+services:
+  flask:
+    build: backend/ .
+    container_name: flask_students
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgresql
+    image: postgres:11
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=education
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

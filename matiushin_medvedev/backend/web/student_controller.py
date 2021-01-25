@@ -42,7 +42,7 @@ def update_student(student_id):
     student.surname = request_body['surname']
     student.patronymic = request_body['patronymic']
     student.entry_date = request_body['entry_date']
-    student.education_form = request_body['education_form']
+    student.examination_form = request_body['education_form']
     student.group_num = request_body['group_num']
     db.session.add(student)
     db.session.commit()
@@ -74,6 +74,6 @@ def get_student_response(student):
         'surname': student.surname,
         'patronymic': student.patronymic,
         'entry_date': student.entry_date,
-        'education_form': student.education_form,
+        'education_form': student.examination_form,
         'group_num': student.group_num
     }

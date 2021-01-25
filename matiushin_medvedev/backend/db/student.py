@@ -16,12 +16,12 @@ class Student(db.Model):
     __tablename__ = 'student'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    surname = db.Column(db.String())
-    patronymic = db.Column(db.String())
+    name = db.Column(db.String(255))
+    surname = db.Column(db.String(255))
+    patronymic = db.Column(db.String(255))
     entry_date = db.Column(db.DateTime())
     education_form = db.Column(db.Enum(EducationForm))
-    group_num = db.Column(db.String())
+    group_num = db.Column(db.String(255))
 
     def __init__(self, name, surname, patronymic,
                  entry_date, education_form, group_num):

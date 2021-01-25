@@ -1,6 +1,8 @@
 from flask import Blueprint, request
 from flask_api import status
 
+from matiushin_medvedev.backend import db
+from matiushin_medvedev.backend.db.educational_plan import EducationalPlan
 from matiushin_medvedev.backend.web.controller_utils import convert_to_json
 
 educational_plan_controller = Blueprint('educational_plan_controller', __name__)
@@ -9,60 +11,45 @@ educational_plan_controller = Blueprint('educational_plan_controller', __name__)
 @educational_plan_controller.route('/educational_plans/', methods=['POST'])
 def create_educational_plan():
     request_body = request.json
-    return convert_to_json({
-        'id': 1,
-        'spec_name': request_body['spec_name'],
-        'discipline': request_body['discipline'],
-        'hours': request_body['hours'],
-        'examination_form': request_body['examination_form']
-    }), status.HTTP_201_CREATED
+    educational_plan = EducationalPlan(request_body['spec_name'],
+                                       request_body['discipline'],
+                                       request_body['hours'],
+                                       request_body['examination_form'])
+    db.session.add(educational_plan)
+    db.session.commit()
+    return convert_to_json(get_educational_plan_response(educational_plan)), status.HTTP_201_CREATED
 
 
 @educational_plan_controller.route('/educational_plans/', methods=['GET'])
 def get_all_educational_plans():
-    return convert_to_json([
-        {
-            'id': 1,
-            'spec_name': 'spec_name',
-            'discipline': 'discipline',
-            'hours': 11,
-            'examination_form': 'examination form'
-        },
-        {
-            'id': 2,
-            'spec_name': 'spec_name',
-            'discipline': 'discipline',
-            'hours': 12,
-            'examination_form': 'examination form'
-        }
-    ])
+    educational_plans = [get_educational_plan_response(ep) for ep in EducationalPlan.query.all()]
+    return convert_to_json(educational_plans)
 
 
 @educational_plan_controller.route('/educational_plans/<educational_plan>', methods=['GET'])
 def get_educational_plan(educational_plan):
-    return convert_to_json({
-        'id': educational_plan,
-        'spec_name': 'spec_name',
-        'discipline': 'discipline',
-        'hours': 1,
-        'examination_form': 'examination form'
-    })
+    educational_plan = EducationalPlan.query.get_or_404(educational_plan)
+    return convert_to_json(get_educational_plan_response(educational_plan))
 
 
 @educational_plan_controller.route('/educational_plans/<educational_plan>', methods=['PUT'])
 def update_educational_plan(educational_plan):
+    educational_plan = EducationalPlan.query.get_or_404(educational_plan)
     request_body = request.json
-    return convert_to_json({
-        'id': educational_plan,
-        'spec_name': request_body['spec_name'],
-        'discipline': request_body['discipline'],
-        'hours': request_body['hours'],
-        'examination_form': request_body['examination_form']
-    })
+    educational_plan.spec_name = request_body['spec_name']
+    educational_plan.discipline = request_body['discipline']
+    educational_plan.hours = request_body['hours']
+    educational_plan.examination_form = request_body['examination_form']
+    db.session.add(educational_plan)
+    db.session.commit()
+    return convert_to_json(get_educational_plan_response(educational_plan))
 
 
 @educational_plan_controller.route('/educational_plans/<educational_plan>', methods=['DELETE'])
 def delete_educational_plan(educational_plan):
+    educational_plan = EducationalPlan.query.get_or_404(educational_plan)
+    db.session.delete(educational_plan)
+    db.session.commit()
     return '', status.HTTP_204_NO_CONTENT
 
 
@@ -87,3 +74,13 @@ def get_educational_plan_gradebook_data(educational_plan):
             }
         ]
     })
+
+
+def get_educational_plan_response(educational_plan):
+    return {
+        'id': educational_plan.id,
+        'spec_name': educational_plan.spec_name,
+        'discipline': educational_plan.discipline,
+        'hours': educational_plan.hours,
+        'examination_form': educational_plan.examination_form
+    }

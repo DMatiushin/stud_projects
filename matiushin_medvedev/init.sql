@@ -1,9 +1,4 @@
-create database education;
-create user education with encrypted password 'password';
-grant all privileges on database education to education;
-\c education
-
-create type education_form as enum ('FULL-TIME', 'EVENING', 'PART-TIME');
+create type education_form as enum ('FULL_TIME', 'EVENING', 'PART_TIME');
 create type examination_form as enum('EXAM', 'TEST');
 
 create table if not exists student

@@ -11,9 +11,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import AppBar from "@material-ui/core/AppBar";
-import StudentTable from './StudentsTable';
-import InputForm from './ModalInputForm';
-import {addStudent, loadAllStudents} from '../api/students';
+import {z as UserTable} from './CurriculusTable';
+import ModalInputForm from './Modal';
+import {addCurriculum, loadAllCurriculums} from '../api/curriculums';
 
 
 const styles = (theme) => ({
@@ -31,7 +31,7 @@ const styles = (theme) => ({
     block: {
         display: 'block',
     },
-    addStudent: {
+    addCurriculum: {
         marginRight: theme.spacing(1),
     },
     contentWrapper: {
@@ -42,31 +42,31 @@ const styles = (theme) => ({
     },
 });
 
-class Students extends React.Component {
+class Curriculums extends React.Component {
 
 
     constructor(props, context) {
         super(props, context);
         this.state = {
-            studentAddModalOpen: false
+            curriculumAddModalOpen: false
         };
-        loadAllStudents();
+        loadAllCurriculums();
     }
 
-    onAddStudentOpen = () => {
+    onAddCurriculumOpen = () => {
         this.setState(() => ({
-            studentAddModalOpen: true
+            curriculumAddModalOpen: true
         }));
     };
 
-    onAddStudentClose = () => {
+    onAddCurriculumClose = () => {
         this.setState(() => ({
-            studentAddModalOpen: false
+            curriculumAddModalOpen: false
         }));
     };
 
-    addStudent = (student) => {
-        addStudent(student);
+    addCurriculum = (user) => {
+        addCurriculum(user);
     };
 
     render() {
@@ -93,10 +93,10 @@ class Students extends React.Component {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    className={classes.addStudent}
-                                    onClick={this.onAddStudentOpen}
+                                    className={classes.addCurriculum}
+                                    onClick={this.onAddCurriculumOpen}
                                 >
-                                    Add student
+                                    Add curriculum
                                 </Button>
                                 <Tooltip title="Reload">
                                     <IconButton>
@@ -107,11 +107,11 @@ class Students extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <StudentTable class={classes.table}/>
-                <InputForm
-                    open={this.state.studentAddModalOpen}
-                    handleClose={this.onAddStudentClose}
-                    handleSubmit={this.addStudent}
+                <UserTable class={classes.table}/>
+                <ModalInputForm
+                    open={this.state.curriculumAddModalOpen}
+                    handleClose={this.onAddCurriculumClose}
+                    handleSubmit={this.addCurriculum}
                 />
             </Paper>
         );
@@ -119,8 +119,8 @@ class Students extends React.Component {
 
 }
 
-Students.propTypes = {
+Curriculums.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Students);
+export default withStyles(styles)(Curriculums);

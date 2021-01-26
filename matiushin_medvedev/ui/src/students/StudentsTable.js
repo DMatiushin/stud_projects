@@ -18,59 +18,76 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {connect} from 'react-redux';
-import {deleteStudent} from '../api/students';
-import InputForm from './InputForm';
+import {deleteStudent, updateStudent} from '../api/students';
+import InputForm from './ModalInputForm';
 
-class UserTable extends React.Component {
+class StudentTable extends React.Component {
 
 
     constructor(props, context) {
         super(props, context);
         this.state = {
-            userToDelete: -1,
-            userToEdit: -1
+            studentToDelete: -1,
+            studentToEdit: -1
         };
     }
 
-    deleteUser = async () => {
-        console.log(`Remove user by id ${this.state.userToDelete}`);
-        await deleteStudent(this.state.userToDelete);
+    deleteStudent = async () => {
+        console.log(`Remove student by id ${this.state.studentToDelete}`);
+        await deleteStudent(this.state.studentToDelete);
         this.onCloseModal();
     };
 
-    updateUser = async () => {
-
+    updateStudent = async (student) => {
+        student.id = this.state.studentToEdit;
+        updateStudent(student);
     };
 
-    onClickDeleteUser = (id) => {
-        this.setState(() => ({userToDelete: id}));
+    onClickDeleteStudent = (id) => {
+        this.setState(() => ({studentToDelete: id}));
     };
 
     onCloseModal = () => {
-        this.setState(() => ({userToDelete: -1, userToEdit: -1}));
+        this.setState(() => ({studentToDelete: -1, studentToEdit: -1}));
     };
 
-    onClickEditUser = (id) => {
-        this.setState(() => ({userToEdit: id}));
+    onClickEditStudent = (id) => {
+        this.setState(() => ({studentToEdit: id}));
     }
 
+
     render() {
-        console.log('Props are', this.props);
-        const userToDelete = this.state.userToDelete;
-        const deleteUserModalOpen = userToDelete >= 1;
-        const editUserModalOpen = this.state.userToEdit >= 1;
+        const studentToDelete = this.state.studentToDelete;
+        const deleteStudentModalOpen = studentToDelete >= 1;
+        const editStudentModalOpen = this.state.studentToEdit >= 1;
+
+        let studentToEdit;
+        if (editStudentModalOpen) {
+            const selectedStudent = this.props.loadedStudents
+                .filter(std => std.id === this.state.studentToEdit)[0];
+            studentToEdit =  {
+                firstName: selectedStudent.name,
+                secondName: selectedStudent.surname,
+                patronymic: selectedStudent.patronymic,
+                entryDate: selectedStudent.entry_date,
+                educationForm: selectedStudent.education_form,
+                class: selectedStudent.group_num,
+            }
+        } else {
+            studentToEdit = {}
+        }
         return (
             <div>
                 <TableContainer component={Paper}>
                     <Table className={this.props.table} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Фамилия</TableCell>
-                                <TableCell>Имя</TableCell>
-                                <TableCell>Отчество</TableCell>
-                                <TableCell>Год поступления</TableCell>
-                                <TableCell>Форма обучения</TableCell>
-                                <TableCell>Группа</TableCell>
+                                <TableCell>Second name</TableCell>
+                                <TableCell>First name</TableCell>
+                                <TableCell>Patronymic</TableCell>
+                                <TableCell>Entry date</TableCell>
+                                <TableCell>Education form</TableCell>
+                                <TableCell>Class</TableCell>
                                 <TableCell/>
                                 <TableCell/>
                             </TableRow>
@@ -89,7 +106,7 @@ class UserTable extends React.Component {
                                     <TableCell>
                                         <IconButton
                                             aria-label="delete"
-                                            onClick={() => this.onClickDeleteUser(row.id)}
+                                            onClick={() => this.onClickDeleteStudent(row.id)}
                                         >
                                             <DeleteIcon/>
                                         </IconButton>
@@ -97,7 +114,7 @@ class UserTable extends React.Component {
                                     <TableCell>
                                         <IconButton
                                             aria-label="edit"
-                                            onClick={() => this.onClickEditUser(row.id)}
+                                            onClick={() => this.onClickEditStudent(row.id)}
                                         >
                                             <EditIcon/>
                                         </IconButton>
@@ -109,33 +126,34 @@ class UserTable extends React.Component {
                 </TableContainer>
 
                 <Dialog
-                    open={deleteUserModalOpen}
+                    open={deleteStudentModalOpen}
                     onClose={this.onCloseModal}
-                    aria-labelledby="delete-user-modal-title"
-                    aria-describedby="delete-user-modal-text"
+                    aria-labelledby="delete-student-modal-title"
+                    aria-describedby="delete-student-modal-text"
                 >
-                    <DialogTitle id="delete-user-modal-title">{"Please, confirm the action"}</DialogTitle>
+                    <DialogTitle id="delete-student-modal-title">{"Please, confirm the action"}</DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="delete-user-modal-text">
-                            This action will permanently remove this user.
+                        <DialogContentText id="delete-student-modal-text">
+                            This action will permanently remove this student.
                             You will not be able to restore them!
-                            Do you really want to remove the user?
+                            Do you really want to remove the student?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button color="primary" autoFocus onClick={this.onCloseModal}>
                             No, close the window
                         </Button>
-                        <Button color="primary" onClick={this.deleteUser}>
+                        <Button color="primary" onClick={this.deleteStudent}>
                             Yes, remove
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <InputForm
-                    open={editUserModalOpen}
+                { Boolean(Object.keys(studentToEdit).length) && <InputForm
+                    open={editStudentModalOpen}
                     handleClose={this.onCloseModal}
-                    handleSubmit={this.onCloseModal}
-                />
+                    handleSubmit={this.updateStudent}
+                    initial={studentToEdit}
+                /> || <div/>}
             </div>
         );
     }
@@ -145,4 +163,4 @@ const mapStateToProps = state => ({
     loadedStudents: state.students.loaded
 });
 
-export const z = connect(mapStateToProps)(UserTable);
+export default connect(mapStateToProps)(StudentTable);

@@ -7,7 +7,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Navigator from './Navigator';
 import Students from './students/Students';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import Content from './Content';
+import Curriculums from './curriculum/Curriculums';
 
 let theme = createMuiTheme({
     palette: {
@@ -151,7 +151,7 @@ function App(props) {
                         <main className={classes.main}>
                             <Switch>
                                 <Route exact={true} path={"/"} component={Students}/>
-                                <Route exact={false} path={"/url1"} component={Content}/>
+                                <Route exact={false} path={"/curriculum"} component={Curriculums}/>
                             </Switch>
                         </main>
                         <footer className={classes.footer}>

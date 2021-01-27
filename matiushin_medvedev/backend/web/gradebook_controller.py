@@ -5,14 +5,14 @@ from matiushin_medvedev.backend import db
 from matiushin_medvedev.backend.db.educational_plan import EducationalPlan
 from matiushin_medvedev.backend.db.gradebook import Gradebook
 from matiushin_medvedev.backend.db.student import Student
-from matiushin_medvedev.backend.web.controller_utils import convert_to_json
+from matiushin_medvedev.backend.web.controller_utils import response_to_json, request_to_json
 
 gradebook_controller = Blueprint('gradebook_controller', __name__)
 
 
 @gradebook_controller.route('/gradebooks/', methods=['POST'])
 def set_mark():
-    request_body = request.json
+    request_body = request_to_json(request)
     student = Student.query.get_or_404(request_body['student_id'])
     educational_plan = EducationalPlan.query.get_or_404(request_body['educational_plan_id'])
     gradebook = Gradebook(student=student,
@@ -21,12 +21,12 @@ def set_mark():
                           mark=request_body['mark'])
     db.session.add(gradebook)
     db.session.commit()
-    return convert_to_json(get_gradebook_response(gradebook)), status.HTTP_201_CREATED
+    return response_to_json(get_gradebook_response(gradebook)), status.HTTP_201_CREATED
 
 
 @gradebook_controller.route('/gradebooks/', methods=['PUT'])
 def update_mark():
-    request_body = request.json
+    request_body = response_to_json(request)
     gradebook = Gradebook.query.filter_by(student_id=request_body['student_id'],
                                           educational_plan_id=request_body['educational_plan_id']).first()
     if gradebook is None:
@@ -35,12 +35,12 @@ def update_mark():
     gradebook.mark = request_body['mark']
     db.session.add(gradebook)
     db.session.commit()
-    return convert_to_json(get_gradebook_response(gradebook))
+    return response_to_json(get_gradebook_response(gradebook))
 
 
 @gradebook_controller.route('/gradebooks/', methods=['DELETE'])
 def remove_mark():
-    request_body = request.json
+    request_body = request_to_json(request)
     gradebook = Gradebook.query.filter_by(student_id=request_body['student_id'],
                                           educational_plan_id=request_body['educational_plan_id']).first()
     if gradebook is None:

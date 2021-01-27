@@ -3,14 +3,14 @@ from flask_api import status
 
 from matiushin_medvedev.backend import db
 from matiushin_medvedev.backend.db.student import Student
-from matiushin_medvedev.backend.web.controller_utils import convert_to_json
+from matiushin_medvedev.backend.web.controller_utils import response_to_json, request_to_json
 
 student_controller = Blueprint('student_controller', __name__)
 
 
 @student_controller.route('/students/', methods=['POST'])
 def create_student():
-    request_body = request.json
+    request_body = request_to_json(request)
     student = Student(request_body['name'],
                       request_body['surname'],
                       request_body['patronymic'],
@@ -19,25 +19,25 @@ def create_student():
                       request_body['group_num'])
     db.session.add(student)
     db.session.commit()
-    return convert_to_json(get_student_response(student)), status.HTTP_201_CREATED
+    return response_to_json(get_student_response(student)), status.HTTP_201_CREATED
 
 
 @student_controller.route('/students/', methods=['GET'])
 def get_all_students():
     students = [get_student_response(student) for student in Student.query.all()]
-    return convert_to_json(students)
+    return response_to_json(students)
 
 
 @student_controller.route('/students/<student_id>', methods=['GET'])
 def get_student(student_id):
     student = Student.query.get_or_404(student_id)
-    return convert_to_json(get_student_response(student))
+    return response_to_json(get_student_response(student))
 
 
 @student_controller.route('/students/<student_id>', methods=['PUT'])
 def update_student(student_id):
     student = Student.query.get_or_404(student_id)
-    request_body = request.json
+    request_body = request_to_json(request)
     student.name = request_body['name']
     student.surname = request_body['surname']
     student.patronymic = request_body['patronymic']
@@ -46,7 +46,7 @@ def update_student(student_id):
     student.group_num = request_body['group_num']
     db.session.add(student)
     db.session.commit()
-    return convert_to_json(get_student_response(student))
+    return response_to_json(get_student_response(student))
 
 
 @student_controller.route('/students/<student_id>', methods=['DELETE'])
@@ -61,7 +61,7 @@ def delete_student(student_id):
 def count_students_by_educational_form():
     education_form = request.args.get("education_form")
     count = Student.query.filter_by(education_form=education_form).count()
-    return convert_to_json({
+    return response_to_json({
         'educational_form': education_form,
         'students_total': count
     })

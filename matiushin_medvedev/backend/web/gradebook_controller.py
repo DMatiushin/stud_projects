@@ -28,10 +28,11 @@ def set_mark():
 def update_mark():
     request_body = request_to_json(request)
     gradebook = Gradebook.query.filter_by(student_id=request_body['student_id'],
-                                          educational_plan_id=request_body['educational_plan_id']).first()
+                                          educational_plan_id=request_body['educational_plan_id'],
+                                          year=request_body['year']).first()
+    print(gradebook)
     if gradebook is None:
         return '', status.HTTP_404_NOT_FOUND
-    gradebook.year = request_body['year']
     gradebook.mark = request_body['mark']
     db.session.add(gradebook)
     db.session.commit()

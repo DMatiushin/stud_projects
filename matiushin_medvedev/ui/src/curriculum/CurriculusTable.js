@@ -157,4 +157,4 @@ const mapStateToProps = state => ({
     loadedCurriculums: state.curriculums.loaded
 });
 
-export const z = connect(mapStateToProps)(CurriculumTable);
+export default connect(mapStateToProps)(CurriculumTable);

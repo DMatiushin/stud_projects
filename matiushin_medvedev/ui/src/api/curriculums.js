@@ -1,39 +1,45 @@
 import {setCurriculums} from '../slices/curriculums';
 import store from '../slices';
-import {loadAllStudents} from './students';
-
-const stubGetAllCurriculums = [
-    {
-        'id': 1,
-        'spec_name': 'spec_name',
-        'discipline': 'discipline',
-        'hours': 11,
-        'examination_form': 'examination form'
-    },
-    {
-        'id': 2,
-        'spec_name': 'spec_name',
-        'discipline': 'discipline',
-        'hours': 12,
-        'examination_form': 'examination form'
-    }
-]
 
 export const loadAllCurriculums = () => {
-    store.dispatch(setCurriculums(stubGetAllCurriculums));
+    fetch('http://localhost:5000/educational_plans')
+        .then(r => r.json())
+        .then(body => {
+            store.dispatch(setCurriculums(body));
+        });
 };
 
 export const addCurriculum = async (curriculum) => {
-    console.log('Added curriculum');
-    // stubGetAllStudents.push(user);
-    loadAllStudents();
+    await fetch('http://localhost:5000/educational_plans/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            spec_name: curriculum.specName,
+            discipline: curriculum.discipline,
+            hours: curriculum.hours,
+            examination_form: curriculum.examinationForm,
+        })
+    });
+    loadAllCurriculums();
 };
 
 export const updateCurriculum = async (curriculum) => {
-    console.log('Updating curriculum', curriculum);
+    await fetch(`http://localhost:5000/educational_plans/${curriculum.id}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            spec_name: curriculum.specName,
+            discipline: curriculum.discipline,
+            hours: curriculum.hours,
+            examination_form: curriculum.examinationForm,
+        })
+    });
+    loadAllCurriculums();
 };
 
 export const deleteCurriculum = async (id) => {
-    console.log('Removing curriculum' + id);
-    loadAllStudents();
+    await fetch(`http://localhost:5000/educational_plans/${id}`, {
+        method: 'DELETE',
+    });
+    loadAllCurriculums();
 }

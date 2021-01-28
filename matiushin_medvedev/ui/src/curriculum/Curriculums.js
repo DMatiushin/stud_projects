@@ -11,7 +11,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import AppBar from "@material-ui/core/AppBar";
-import {z as UserTable} from './CurriculusTable';
+import CurriculumTable from './CurriculusTable';
 import ModalInputForm from './Modal';
 import {addCurriculum, loadAllCurriculums} from '../api/curriculums';
 
@@ -107,7 +107,7 @@ class Curriculums extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <UserTable class={classes.table}/>
+                <CurriculumTable class={classes.table}/>
                 <ModalInputForm
                     open={this.state.curriculumAddModalOpen}
                     handleClose={this.onAddCurriculumClose}

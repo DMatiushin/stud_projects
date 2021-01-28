@@ -59,6 +59,7 @@ def delete_educational_plan(educational_plan):
 @educational_plan_controller.route('/educational_plans/<educational_plan_id>/gradebooks', methods=['GET'])
 def get_educational_plan_gradebook_data(educational_plan_id):
     result_set = db.session.execute("SELECT s.surname     as surname,\n"
+                                    "       s.id as student_id,\n"
                                     "       ep.discipline as discipline,\n"
                                     "       g.year        as year,\n"
                                     "       g.mark        as mark\n"
@@ -73,7 +74,7 @@ def get_educational_plan_gradebook_data(educational_plan_id):
         discipline = row.discipline
         if row.surname is not None and row.mark is not None:
             years_to_marks[row.year].append({
-                'surname': row.surname,
+                'student_id': row.student_id,
                 'mark': row.mark
             })
     gradebooks = []

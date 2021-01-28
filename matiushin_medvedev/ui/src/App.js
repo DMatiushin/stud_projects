@@ -8,6 +8,7 @@ import Navigator from './Navigator';
 import Students from './students/Students';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Curriculums from './curriculum/Curriculums';
+import Gradebook from "./gradebook/Gradebook";
 
 let theme = createMuiTheme({
     palette: {
@@ -152,6 +153,7 @@ function App(props) {
                             <Switch>
                                 <Route exact={true} path={"/"} component={Students}/>
                                 <Route exact={false} path={"/curriculum"} component={Curriculums}/>
+                                <Route exact={false} path={"/gradebook"} component={Gradebook}/>
                             </Switch>
                         </main>
                         <footer className={classes.footer}>

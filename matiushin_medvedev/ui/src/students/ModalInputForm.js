@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import {withStyles} from "@material-ui/core/styles";
 
 const styles = (theme) => ({
-    names: {
+    root: {
         '& .MuiTextField-root': {
             margin: theme.spacing(1),
             width: 150,
@@ -78,14 +78,14 @@ class ModalInputForm extends React.Component {
                 onClose={this.props.handleClose}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                <DialogTitle id="form-dialog-title">Student</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         To subscribe to this website, please enter your email address here. We will send updates
                         occasionally.
                     </DialogContentText>
                     <form noValidate autoComplete="off">
-                        <div className={this.props.classes.names}>
+                        <div className={this.props.classes.root}>
                             <TextField
                                 margin="dense"
                                 label="First name"
@@ -108,7 +108,7 @@ class ModalInputForm extends React.Component {
                                 onChange={this.handlePatronymic}
                             />
                         </div>
-                        <div className={this.props.classes.names}>
+                        <div className={this.props.classes.root}>
                             <TextField
                                 margin="dense"
                                 label="Entry date"

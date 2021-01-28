@@ -26,7 +26,7 @@ def set_mark():
 
 @gradebook_controller.route('/gradebooks/', methods=['PUT'])
 def update_mark():
-    request_body = response_to_json(request)
+    request_body = request_to_json(request)
     gradebook = Gradebook.query.filter_by(student_id=request_body['student_id'],
                                           educational_plan_id=request_body['educational_plan_id']).first()
     if gradebook is None:

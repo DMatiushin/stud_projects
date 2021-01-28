@@ -1,6 +1,27 @@
 # Приложение по учету успеваемости студентов.
 * [Задание](#задание)
 * [Запуск приложения](#запуск-приложения)
+* [API](#api)
+    * [Студенты](#студенты)
+        * [Добавить студента](#добавить-студента)
+        * [Получить список всех студентов](#получить-список-всех-студентов)
+        * [Изменить данные студента](#изменить-данные-студента)
+        * [Удалить студента](#удалить-студента)
+        * [Подсчитать количество студентов обучающихся на заданной форме обучения](#подсчитать-количество-студентов-обучающихся-на-заданной-форме-обучения)
+    * [Учебные планы](#учебные-планы)
+        * [Добавить учебный план](#добавить-учебный-план)
+        * [Получить список всех учебных планов](#получить-список-всех-учебных-планов)
+        * [Получить данные по учебному плану](#получить-данные-по-учебному-плану)
+        * [Изменить данные учебного плана](#изменить-данные-учебного-плана)
+        * [Удалить учебный план](#удалить-учебный-план)
+        * [Получить оценки всех студентов за все года по учебному плану](#получить-оценки-всех-студентов-за-все-года-по-учебному-плану)
+    * [Журнал успеваемости](#журнал-успеваемости)
+        * [Добавить оценку](#добавить-оценку)
+        * [Изменить оценку](#изменить-оценку)
+        * [Удалить оценку](#удалить-оценку)
+* [Enumerations](#enumerations)
+    * [Формы обучения](#формы-обучения)
+    * [Формы отчетности](#формы-отчетности)
 
 ## Задание
 База данных должна содержать данные о контингенте студентов (фамилия,
@@ -25,6 +46,11 @@
 4\) предоставить возможность добавления и изменения информации о журнале
 успеваемости.
 
+Дополнительное задание 
+1\) предоставить API поиска всех отметок по заданной дисциплине
+
+2\) подготовить приложение для запуска в Docker 
+
 [↑↑↑↑↑↑↑](#top)
 
 ## Запуск приложения
@@ -37,9 +63,508 @@
 `pip install -r requriments.txt`
 
 Для старта приложения необходимо добавить FLASK_APP в переменные среды
-`set FLASK_APP=__init__.py` (Windows)
+`set FLASK_APP=backend/__init__.py` (Windows)
 затем запустить приложение при помощи 
 `flask run`
 Дефолтный порт - 5000
 
+[↑↑↑↑↑↑↑](#top)
 
+## API
+### Студенты
+#### Добавить студента
+POST /students/
+
+<details>
+  <summary>Request</summary> 
+
+```json
+{
+   "name":"name",
+   "surname":"surname",
+   "patronymic":"patronymic",
+   "entry_date":"2020-10-10",
+   "education_form":"PART_TIME",
+   "group_num":"6"
+}
+```
+</details>
+<details>
+  <summary>Response</summary>
+
+```json
+{
+   "id":1,
+   "name":"name",
+   "surname":"surname",
+   "patronymic":"patronymic",
+   "entry_date":"2020-10-10 00:00:00",
+   "education_form":"PART_TIME",
+   "group_num":"6"
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X POST localhost:5000/students/ -H "Content-Type: application/json" -d '{"name": "name", "surname": "surname", "patronymic": "patronymic", "entry_date": "2020-10-10", "education_form": "PART_TIME", "group_num": "6"}'
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+#### Получить список всех студентов
+GET /students/
+
+<details>
+  <summary>Response</summary>
+
+```json
+[
+   {
+      "id":1,
+      "name":"name",
+      "surname":"surname",
+      "patronymic":"patronymic",
+      "entry_date":"2020-10-10 00:00:00",
+      "education_form":"PART_TIME",
+      "group_num":"6"
+   },
+   {
+      "id":2,
+      "name":"name2",
+      "surname":"surname2",
+      "patronymic":"patronymic",
+      "entry_date":"2020-10-10 00:00:00",
+      "education_form":"PART_TIME",
+      "group_num":"6"
+   },
+   {
+      "id":3,
+      "name":"name",
+      "surname":"surname",
+      "patronymic":"patronymic",
+      "entry_date":"2020-10-10 00:00:00",
+      "education_form":"PART_TIME",
+      "group_num":"6d"
+   }
+]
+```
+</details>
+
+Пример запроса
+```shell
+curl -X GET localhost:5000/students/
+```
+[↑↑↑↑↑↑↑](#top)
+
+#### Получить данные студента
+GET /students/<student_id>
+
+student_id - сгенерированный идентификатор студента
+
+<details>
+  <summary>Response</summary>
+
+```json
+{
+  "id":1,
+  "name":"name",
+  "surname":"surname",
+  "patronymic":"patronymic",
+  "entry_date":"2020-10-10 00:00:00",
+  "education_form":"PART_TIME",
+  "group_num":"6"
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X GET localhost:5000/students/1
+```
+[↑↑↑↑↑↑↑](#top)
+
+#### Изменить данные студента
+PUT /students/<student_id>
+
+student_id - сгенерированный идентификатор студента
+
+<details>
+  <summary>Request</summary>
+
+```json
+{
+   "name":"name",
+   "surname":"surname",
+   "patronymic":"patronymic",
+   "entry_date":"2020-10-10",
+   "education_form":"PART_TIME",
+   "group_num":"6"
+}
+```
+</details>
+<details>
+  <summary>Response</summary>
+
+```json
+{
+  "id":1,
+  "name":"name",
+  "surname":"surname",
+  "patronymic":"patronymic",
+  "entry_date":"2020-10-10 00:00:00",
+  "education_form":"PART_TIME",
+  "group_num":"6"
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X PUT localhost:5000/students/1 -H "Content-Type: application/json" -d '{"name": "name", "surname": "surname", "patronymic": "patronymic", "entry_date": "2020-10-11", "education_form": "FULL_TIME", "group_num": "7"}'
+```
+[↑↑↑↑↑↑↑](#top)
+
+#### Удалить студента
+DELETE /students/<student_id>
+
+student_id - сгенерированный идентификатор студента
+
+Пример запроса
+```shell
+curl -X DELETE localhost:5000/students/4
+```
+#### Подсчитать количество студентов обучающихся на заданной форме обучения
+GET /students/count?education_form=FULL_TIME
+
+education_form - форма обучения (см [формы обучения](#формы-обучения))
+<details>
+  <summary>Response</summary>
+
+```json
+{
+   "educational_form":"PART_TIME",
+   "students_total":3
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X GET localhost:5000/students/count?education_form=FULL_TIME
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+### Учебные планы
+#### Добавить учебный план
+
+POST /educational_plans/
+
+<details>
+  <summary>Request</summary>
+
+```json
+{
+   "spec_name":"web-senior",
+   "discipline":"web",
+   "hours":40,
+   "examination_form":"EXAM"
+}
+```
+</details>
+<details>
+  <summary>Response</summary>
+
+```json
+{
+   "id": 1,
+   "spec_name":"web-senior",
+   "discipline":"web",
+   "hours":40,
+   "examination_form":"EXAM"
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X POST localhost:5000/educational_plans/ -H "Content-Type: application/json" -d '{"spec_name": "web-senior", "discipline": "web", "hours": 40, "examination_form": "EXAM"}'
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+#### Получить список всех учебных планов
+GET /educational_plans/
+
+<details>
+  <summary>Response</summary>
+
+```json
+[
+   {
+      "id":1,
+      "spec_name":"web-senior",
+      "discipline":"web",
+      "hours":40,
+      "examination_form":"EXAM"
+   },
+   {
+      "id":2,
+      "spec_name":"web-senior",
+      "discipline":"web",
+      "hours":40,
+      "examination_form":"EXAM"
+   }
+]
+``` 
+</details>
+
+Пример запроса
+```shell
+curl localhost:5000/educational_plans/
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+#### Получить данные по учебному плану
+
+GET /educational_plans/<educational_plan_id>
+
+educational_plan_id - сгенерированный идентификатор учебного плана
+
+<details>
+  <summary>Response</summary>
+
+```json
+{
+      "id":1,
+      "spec_name":"web-senior",
+      "discipline":"web",
+      "hours":40,
+      "examination_form":"EXAM"
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl localhost:5000/educational_plans/1
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+#### Изменить данные учебного плана
+
+PUT /educational_plans/<educational_plan_id>
+
+educational_plan_id - сгенерированный идентификатор учебного плана
+
+<details>
+  <summary>Request</summary>
+
+```json
+{
+   "spec_name":"web-senior",
+   "discipline":"web",
+   "hours":40,
+   "examination_form":"EXAM"
+}
+```
+</details>
+<details>
+  <summary>Response</summary>
+
+```json
+{
+   "id": 1,
+   "spec_name":"web-senior",
+   "discipline":"web",
+   "hours":40,
+   "examination_form":"EXAM"
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X PUT localhost:5000/educational_plans/1 -H "Content-Type: application/json" -d '{"spec_name": "web-senior-1", "discipline": "webx", "hours": 45, "examination_form": "TEST"}'
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+#### Удалить учебный план
+DELETE /educational_plans/<educational_plan_id>
+
+educational_plan_id - сгенерированный идентификатор учебного плана
+
+Пример запроса
+```shell
+curl -X DELETE localhost:5000/educational_plans/1
+```
+#### Получить оценки всех студентов за все года по учебному плану
+GET /educational_plans/<educational_plan_id>/gradebook
+
+educational_plan_id - сгенерированный идентификатор учебного плана
+
+<details>
+  <summary>Response</summary>
+
+```json
+{
+   "discipline":"web",
+   "gradebooks":[
+      {
+         "year":2021,
+         "students_marks":[
+            {
+               "surname":"surname2",
+               "mark":6
+            }
+         ]
+      },
+      {
+         "year":2020,
+         "students_marks":[
+            {
+               "surname":"surname2",
+               "mark":6
+            },
+            {
+               "surname":"surname",
+               "mark":5
+            }
+         ]
+      },
+      {
+         "year":2023,
+         "students_marks":[
+            {
+               "surname":"surname2",
+               "mark":5
+            },
+            {
+               "surname":"surname",
+               "mark":5
+            }
+         ]
+      }
+   ]
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl localhost:5000/educational_plans/1/gradebooks
+```
+
+[↑↑↑↑↑↑↑](#top)
+### Журнал успеваемости
+#### Добавить оценку
+POST /gradebooks/
+
+<details>
+    <summary>Request</summary>
+
+```json
+{
+   "student_id":8,
+   "educational_plan_id":2,
+   "year":2020,
+   "mark":5
+}
+```
+</details>
+<details>
+    <summary>Response</summary>
+
+```json
+{
+   "student_id":8,
+   "educational_plan_id":2,
+   "year":2020,
+   "mark":5
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X POST localhost:5000/gradebooks/ -H "Content-Type: application/json" -d '{"student_id": 8, "educational_plan_id": 2, "year":2020, "mark":5}'
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+#### Изменить оценку
+PUT /gradebooks/
+
+<details>
+    <summary>Request</summary>
+
+```json
+{
+   "student_id":8,
+   "educational_plan_id":2,
+   "year":2020,
+   "mark":5
+}
+```
+</details>
+<details>
+    <summary>Response</summary>
+
+```json
+{
+   "student_id":8,
+   "educational_plan_id":2,
+   "year":2020,
+   "mark":5
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X PUT localhost:5000/gradebooks/ -H "Content-Type: application/json" -d '{"student_id": 8, "educational_plan_id": 2, "year":2020, "mark":4}'
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+#### Удалить оценку
+DELETE /gradebooks/
+
+<details>
+    <summary>Request</summary>
+
+```json
+{
+   "student_id":8,
+   "educational_plan_id":2
+}
+```
+</details>
+<details>
+    <summary>Response</summary>
+
+```json
+{
+   "student_id":8,
+   "educational_plan_id":2
+}
+```
+</details>
+
+Пример запроса
+```shell
+curl -X DELETE localhost:5000/gradebooks/ -H "Content-Type: application/json" -d '{"student_id": 8, "educational_plan_id": 2}'
+```
+
+[↑↑↑↑↑↑↑](#top)
+
+## Enumerations
+### Формы обучения
+Формы обучения задаются перечислением EducationalForm('FULL_TIME', 'EVENING', 'PART_TIME')
+### Формы отчетности
+Формы отчетности задаются перечислением ExaminationForm('EXAM', 'TEST')
+[↑↑↑↑↑↑↑](#top)

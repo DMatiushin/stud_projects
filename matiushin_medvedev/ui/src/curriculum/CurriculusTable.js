@@ -34,7 +34,6 @@ class CurriculumTable extends React.Component {
     }
 
     deleteCurriculum = async () => {
-        console.log(`Remove curriculum by id ${this.state.userToDelete}`);
         await deleteCurriculum(this.state.curriculumToDelete);
         this.onCloseModal();
     };

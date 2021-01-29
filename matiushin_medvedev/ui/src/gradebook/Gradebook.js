@@ -146,14 +146,12 @@ class Gradebooks extends React.Component {
             .then(gradebook => {
                 const filteredYearGradebook = gradebook.gradebooks
                     .filter(g => g.year === parseInt(yearInput));
-                console.log('Filtered filteredYearGradebook', filteredYearGradebook);
                 if (filteredYearGradebook.length) {
                     const classFilteredGradebook = filteredYearGradebook[0];
                     classFilteredGradebook.students_marks = classFilteredGradebook
                         .students_marks
                         .filter(s => classFilteredStudents.has(s.student_id));
                     if (classFilteredGradebook.students_marks.length) {
-                        console.log('classFilteredGradebook', classFilteredGradebook);
                         this.setState(() => ({
                             currentGradebook: classFilteredGradebook,
                             currentDisciplineId: curriculumId

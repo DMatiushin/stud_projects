@@ -17,7 +17,6 @@ class ModalInputForm extends React.Component {
     constructor(props) {
         super(props);
         let initial = this.props.initial || {};
-        console.log('Initial', initial);
         this.state = {
             firstName: initial.firstName || '',
             secondName: initial.secondName || '',
@@ -70,7 +69,6 @@ class ModalInputForm extends React.Component {
     };
 
     render() {
-        console.log('Modal input form state', this.state);
         return (
             <Dialog
                 open={this.props.open}

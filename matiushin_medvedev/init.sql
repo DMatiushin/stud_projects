@@ -7,7 +7,7 @@ create table if not exists student
     name           character varying(255),
     surname        character varying(255),
     patronymic     character varying(255),
-    entry_date     timestamp without time zone,
+    entry_date     date,
     education_form education_form,
     group_num      character varying(255),
     constraint student_group_constraint unique (name, surname, patronymic, group_num)

@@ -5,6 +5,10 @@ services:
     container_name: flask_students
     ports:
       - "5000:5000"
+    environment:
+      - POSTGRESQL_USERNAME=education
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRESQL_HOST=postgresql
     depends_on:
       - postgres
   postgres:

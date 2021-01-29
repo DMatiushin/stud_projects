@@ -7,8 +7,8 @@ class Gradebook(db.Model):
     __tablename__ = 'gradebook'
 
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey(Student.id), primary_key=True)
-    educational_plan_id = db.Column(db.Integer, db.ForeignKey(EducationalPlan.id), primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey(Student.id))
+    educational_plan_id = db.Column(db.Integer, db.ForeignKey(EducationalPlan.id))
     year = db.Column(db.Integer())
     mark = db.Column(db.Integer())
 

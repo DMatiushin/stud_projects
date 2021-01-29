@@ -1,8 +1,16 @@
-import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@material-ui/core";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    MenuItem,
+    TextField
+} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import React from "react";
 import {withStyles} from "@material-ui/core/styles";
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const styles = (theme) => ({
     root: {
@@ -33,21 +41,21 @@ class ModalInput extends React.Component {
         this.props.handleClose();
     };
 
-    handleClassChange = (event, newValue) => {
+    handleClassChange = ({target: {value}}) => {
         this.setState(() => ({
-            class: newValue
+            class: value
         }));
     };
 
-    handleDisciplineChange = (event, newValue) => {
+    handleDisciplineChange = ({target: {value}}) => {
         this.setState(() => ({
-            discipline: newValue
+            discipline: value
         }));
     };
 
-    handleYearChange = (event, newValue) => {
+    handleYearChange = ({target: {value}}) => {
         this.setState(() => ({
-            year: newValue
+            year: value
         }));
     };
 
@@ -64,30 +72,51 @@ class ModalInput extends React.Component {
                         Please, enter class and discipline names.
                     </DialogContentText>
                     <form noValidate autoComplete="off">
-                        <div className={this.props.classes.root}>
-                            <Autocomplete
-                                options={this.props.groups}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Choose a class" margin="normal" variant="outlined"/>
-                                )}
-                                onChange={this.handleClassChange}
-                            />
-                            <Autocomplete
-                                options={this.props.disciplines}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Choose a discipline" margin="normal"
-                                               variant="outlined"/>
-                                )}
-                                onChange={this.handleDisciplineChange}
-                            />
-                            <TextField
-                                margin="dense"
-                                label="Year"
-                                type="text"
-                                onChange={this.handleYearChange}
-                                value={this.state.year}
-                            />
-                        </div>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    select
+                                    margin="dense"
+                                    label="Choose a class"
+                                    type="text"
+                                    value={this.state.educationForm}
+                                    onChange={this.handleClassChange}
+                                >
+                                    {this.props.groups.map((group) => (
+                                        <MenuItem key={group} value={group}>
+                                            {group}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    select
+                                    margin="dense"
+                                    label="Choose a discipline"
+                                    type="text"
+                                    onChange={this.handleDisciplineChange}
+                                >
+                                    {this.props.disciplines.map((discipline) => (
+                                        <MenuItem key={discipline} value={discipline}>
+                                            {discipline}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="Year"
+                                    type="text"
+                                    onChange={this.handleYearChange}
+                                    value={this.state.year}
+                                />
+                            </Grid>
+                        </Grid>
                     </form>
                 </DialogContent>
                 <DialogActions>

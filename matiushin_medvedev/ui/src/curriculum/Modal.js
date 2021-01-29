@@ -105,7 +105,7 @@ class ModalInputForm extends React.Component {
                                     fullWidth
                                     margin="dense"
                                     label="Hours"
-                                    type="text"
+                                    type="number"
                                     value={this.state.hours}
                                     onChange={this.handleHours}
                                 />

@@ -13,8 +13,8 @@ import {connect} from "react-redux";
 import ModalInput from "./ModalInput";
 import {loadAllStudents} from "../api/students";
 import {createGradebook, getGradebookByDisciplineId} from "../api/gradebooks";
-import gradebook from "../slices/gradebook";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import Typography from "@material-ui/core/Typography";
 
 
 const styles = (theme) => ({
@@ -56,7 +56,8 @@ class Gradebooks extends React.Component {
             currentGradebook: {},
             currentDisciplineId: -1,
             classInput: '',
-            disciplineInput: ''
+            disciplineInput: '',
+            yearInput: new Date().getFullYear()
         };
         loadAllCurriculums();
         loadAllStudents();
@@ -101,37 +102,68 @@ class Gradebooks extends React.Component {
             classInput: newValue
         }));
     };
+    handleYearInput = ({target: {value}}) => {
+        this.setState(() => ({
+            yearInput: value
+        }));
+    };
 
     doSearch = () => {
         const classInput = this.state.classInput;
         const disciplineInput = this.state.disciplineInput;
-        if (!classInput || !disciplineInput) {
-            // todo display warning
-            alert('class or discipline is not set');
+        const yearInput = this.state.yearInput;
+        if (!classInput || !disciplineInput || !yearInput) {
             return;
         }
 
-        let curriculums = this.props.loadedCurriculums;
-        // let curriculums = this.props.loadedStudents;
+        const clearGradebooks = () => {
+            this.setState(() => ({
+                currentGradebook: [],
+                currentDisciplineId: -1
+            }));
+        };
+
+        const curriculums = this.props.loadedCurriculums;
+        const classFilteredStudents = new Map();
+        this.props.loadedStudents
+            .filter(s => s.group_num === classInput)
+            .forEach(s => classFilteredStudents.set(s.id, s));
+
+        if (classFilteredStudents.size === 0) {
+            clearGradebooks();
+            return;
+        }
 
         const matchedCurriculums = curriculums
             .filter(c => c.discipline === disciplineInput);
 
-        // const matchedClasses =
-        //     .filter(c => c.discipline === disciplineInput);
-
         if (matchedCurriculums.length !== 1) {
-            return;
+            clearGradebooks();
         }
+
         const curriculumId = matchedCurriculums[0].id;
         getGradebookByDisciplineId(curriculumId)
             .then(gradebook => {
-                if (gradebook.gradebooks.length) {
-                    this.setState(() => ({
-                        //todo select year
-                        currentGradebook: gradebook.gradebooks[0],
-                        currentDisciplineId: curriculumId
-                    }));
+                const filteredYearGradebook = gradebook.gradebooks
+                    .filter(g => g.year === parseInt(yearInput));
+                console.log('Filtered filteredYearGradebook', filteredYearGradebook);
+                if (filteredYearGradebook.length) {
+                    const classFilteredGradebook = filteredYearGradebook[0];
+                    classFilteredGradebook.students_marks = classFilteredGradebook
+                        .students_marks
+                        .filter(s => classFilteredStudents.has(s.student_id));
+                    if (classFilteredGradebook.students_marks.length) {
+                        console.log('classFilteredGradebook', classFilteredGradebook);
+                        this.setState(() => ({
+                            //todo select year
+                            currentGradebook: filteredYearGradebook[0],
+                            currentDisciplineId: curriculumId
+                        }));
+                    } else {
+                        clearGradebooks();
+                    }
+                } else {
+                    clearGradebooks();
                 }
             });
     };
@@ -181,6 +213,16 @@ class Gradebooks extends React.Component {
                                     onChange={this.handleClassInput}
                                 />
                             </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="Year"
+                                    type="number"
+                                    onChange={this.handleYearInput}
+                                    value={this.state.yearInput}
+                                />
+                            </Grid>
                             <Grid item>
                                 <Button
                                     variant="contained"
@@ -202,12 +244,19 @@ class Gradebooks extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                { Boolean(this.state.currentDisciplineId !== -1) &&
+                {Boolean(this.state.currentDisciplineId !== -1) &&
                 <GradebookTable
                     class={classes.table}
                     gradebook={this.state.currentGradebook}
                     disciplineId={this.state.currentDisciplineId}
                 />}
+
+                {!Boolean(this.state.currentDisciplineId !== -1) &&
+                <div className={classes.contentWrapper}>
+                    <Typography color="textSecondary" align="center">
+                        No gradebook found
+                    </Typography>
+                </div>}
                 <ModalInput
                     open={this.state.modalOpen}
                     handleSubmit={this.onSubmitModal}

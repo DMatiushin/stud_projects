@@ -32,15 +32,10 @@ class StudentGradeRow extends React.Component {
                 <TableCell>{this.state.student.patronymic}</TableCell>
                 <TableCell>
                     <FormControl className={this.props.classes.formControl}>
-                        <InputLabel htmlFor="age-native-simple">Age</InputLabel>
                         <Select
                             native
                             value={this.state.grade}
                             onChange={this.onChangeGrade}
-                            inputProps={{
-                                name: 'age',
-                                id: 'age-native-simple',
-                            }}
                         >
                             <option value={-1}>Not stated</option>
                             <option value={0}>Failed</option>

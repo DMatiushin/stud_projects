@@ -20,6 +20,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import {connect} from 'react-redux';
 import {deleteCurriculum, updateCurriculum} from '../api/curriculums';
 import ModalInputForm from './Modal';
+import {examinationForms} from "./common";
 
 class CurriculumTable extends React.Component {
 
@@ -94,7 +95,11 @@ class CurriculumTable extends React.Component {
                                     </TableCell>
                                     <TableCell>{row.discipline}</TableCell>
                                     <TableCell>{row.hours}</TableCell>
-                                    <TableCell>{row.examination_form}</TableCell>
+                                    <TableCell>{
+                                        examinationForms
+                                            .filter(entry => entry.value === row.examination_form)[0]
+                                            .label
+                                    }</TableCell>
                                     <TableCell>
                                         <IconButton
                                             aria-label="delete"

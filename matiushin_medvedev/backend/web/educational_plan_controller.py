@@ -6,13 +6,14 @@ from flask_api import status
 from matiushin_medvedev.backend import db
 from matiushin_medvedev.backend.db.educational_plan import EducationalPlan
 from matiushin_medvedev.backend.web.controller_utils import response_to_json, request_to_json
+from matiushin_medvedev.backend.web.dto.educational_plan_schema import EducationalPlanSchema
 
 educational_plan_controller = Blueprint('educational_plan_controller', __name__)
 
 
 @educational_plan_controller.route('/educational_plans/', methods=['POST'])
 def create_educational_plan():
-    request_body = request_to_json(request)
+    request_body = request_to_json(request, EducationalPlanSchema())
     educational_plan = EducationalPlan(request_body['spec_name'],
                                        request_body['discipline'],
                                        request_body['hours'],
@@ -38,7 +39,7 @@ def get_educational_plan(educational_plan):
 @educational_plan_controller.route('/educational_plans/<educational_plan>', methods=['PUT'])
 def update_educational_plan(educational_plan):
     educational_plan = EducationalPlan.query.get_or_404(educational_plan)
-    request_body = request_to_json(request)
+    request_body = request_to_json(request, EducationalPlanSchema())
     educational_plan.spec_name = request_body['spec_name']
     educational_plan.discipline = request_body['discipline']
     educational_plan.hours = request_body['hours']

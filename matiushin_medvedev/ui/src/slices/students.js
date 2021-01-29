@@ -3,9 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     loaded: [],
-    userIdToDelete: -1,
-    userToUpdate: {},
-    userToCreate: {}
+    availableClasses: []
 };
 
 const studentsSlice = createSlice({
@@ -13,8 +11,8 @@ const studentsSlice = createSlice({
     initialState,
     reducers: {
         setStudents(state, action) {
-            console.log('Receive event');
             state.loaded = action.payload;
+            state.availableClasses = Array.from(new Set(action.payload.map(s => s.group_num)));
         }
     }
 })

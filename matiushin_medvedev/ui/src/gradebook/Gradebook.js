@@ -13,6 +13,8 @@ import {connect} from "react-redux";
 import ModalInput from "./ModalInput";
 import {loadAllStudents} from "../api/students";
 import {createGradebook, getGradebookByDisciplineId} from "../api/gradebooks";
+import gradebook from "../slices/gradebook";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 
 const styles = (theme) => ({
@@ -51,8 +53,10 @@ class Gradebooks extends React.Component {
         super(props, context);
         this.state = {
             modalOpen: false,
-            currentGradebook: [],
-            currentCurriculumId: -1
+            currentGradebook: {},
+            currentDisciplineId: -1,
+            classInput: '',
+            disciplineInput: ''
         };
         loadAllCurriculums();
         loadAllStudents();
@@ -86,28 +90,52 @@ class Gradebooks extends React.Component {
             });
     };
 
-    handleSearchInput = (e) => {
-        let searchString = e.target.value;
-        if (!searchString) {
-            return;
-        }
-        let curriculums = this.props.loadedCurriculums;
+    handleDisciplineInput = (e, newValue) => {
+        this.setState(() => ({
+            disciplineInput: newValue
+        }));
+    };
 
-        const match = curriculums
-            .filter(c => c.spec_name.includes(searchString) || c.discipline.includes(searchString));
-        console.log('Matched', match);
-        if (match.length !== 1) {
+    handleClassInput = (e, newValue) => {
+        this.setState(() => ({
+            classInput: newValue
+        }));
+    };
+
+    doSearch = () => {
+        const classInput = this.state.classInput;
+        const disciplineInput = this.state.disciplineInput;
+        if (!classInput || !disciplineInput) {
+            // todo display warning
+            alert('class or discipline is not set');
             return;
         }
-        const curriculumId = match[0].id;
+
+        let curriculums = this.props.loadedCurriculums;
+        // let curriculums = this.props.loadedStudents;
+
+        const matchedCurriculums = curriculums
+            .filter(c => c.discipline === disciplineInput);
+
+        // const matchedClasses =
+        //     .filter(c => c.discipline === disciplineInput);
+
+        if (matchedCurriculums.length !== 1) {
+            return;
+        }
+        const curriculumId = matchedCurriculums[0].id;
         getGradebookByDisciplineId(curriculumId)
             .then(gradebook => {
-                this.setState(() => ({
-                    currentGradebook: gradebook,
-                    currentCurriculumId: curriculumId
-                }));
-            })
+                if (gradebook.gradebooks.length) {
+                    this.setState(() => ({
+                        //todo select year
+                        currentGradebook: gradebook.gradebooks[0],
+                        currentDisciplineId: curriculumId
+                    }));
+                }
+            });
     };
+
 
     render() {
         const {classes} = this.props;
@@ -115,8 +143,6 @@ class Gradebooks extends React.Component {
             new Set(this.props.loadedStudents.map(s => s.group_num))
         );
         const availableDisciplines = this.props.loadedCurriculums.map(c => c.discipline);
-        console.log('state', this.state);
-
         return (
             <Paper className={classes.paper}>
                 <AppBar className={classes.searchBar} position="static" color="default" elevation={0}>
@@ -126,17 +152,44 @@ class Gradebooks extends React.Component {
                                 <SearchIcon className={classes.block} color="inherit"/>
                             </Grid>
                             <Grid item xs>
-                                <TextField
-                                    fullWidth
-                                    placeholder="Search by discipline"
-                                    onChange={this.handleSearchInput}
-                                    InputProps={{
-                                        disableUnderline: true,
-                                        className: classes.searchInput,
+                                <Autocomplete
+                                    options={availableDisciplines}
+                                    renderInput={(params) => {
+                                        params.InputProps.disableUnderline = true;
+                                        return (
+                                            <TextField
+                                                {...params}
+                                                fullWidth
+                                                placeholder="Discipline"
+                                            />);
                                     }}
+                                    onChange={this.handleDisciplineInput}
+                                />
+                            </Grid>
+                            <Grid item xs>
+                                <Autocomplete
+                                    options={availableGroups}
+                                    renderInput={(params) => {
+                                        params.InputProps.disableUnderline = true;
+                                        return (
+                                            <TextField
+                                                {...params}
+                                                fullWidth
+                                                placeholder="Class"
+                                            />);
+                                    }}
+                                    onChange={this.handleClassInput}
                                 />
                             </Grid>
                             <Grid item>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.add}
+                                    onClick={this.doSearch}
+                                >
+                                    Search
+                                </Button>
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -149,7 +202,12 @@ class Gradebooks extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <GradebookTable class={classes.table}/>
+                { Boolean(this.state.currentDisciplineId !== -1) &&
+                <GradebookTable
+                    class={classes.table}
+                    gradebook={this.state.currentGradebook}
+                    disciplineId={this.state.currentDisciplineId}
+                />}
                 <ModalInput
                     open={this.state.modalOpen}
                     handleSubmit={this.onSubmitModal}

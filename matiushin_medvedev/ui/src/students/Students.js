@@ -7,13 +7,13 @@ import Grid from "@material-ui/core/Grid";
 import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import RefreshIcon from "@material-ui/icons/Refresh";
 import AppBar from "@material-ui/core/AppBar";
 import StudentTable from './StudentsTable';
 import InputForm from './ModalInputForm';
 import {addStudent, loadAllStudents} from '../api/students';
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {connect} from "react-redux";
+import Typography from "@material-ui/core/Typography";
 
 
 const styles = (theme) => ({
@@ -48,7 +48,9 @@ class Students extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            studentAddModalOpen: false
+            studentAddModalOpen: false,
+            classSearchString: '',
+            filteredStudents: []
         };
         loadAllStudents();
     }
@@ -69,6 +71,19 @@ class Students extends React.Component {
         addStudent(student);
     };
 
+    onChangeSearchInput = (e, newValue) => {
+        this.setState(() => ({
+            classSearchString: newValue
+        }));
+    }
+
+    doSearch = () => {
+        const classToFilter = this.state.classSearchString;
+        this.setState(() => ({
+            filteredStudents: this.props.availableStudents.filter(s => s.group_num === classToFilter)
+        }));
+    };
+
     render() {
         const {classes} = this.props;
         return (
@@ -80,16 +95,28 @@ class Students extends React.Component {
                                 <SearchIcon className={classes.block} color="inherit"/>
                             </Grid>
                             <Grid item xs>
-                                <TextField
-                                    fullWidth
-                                    placeholder="Search by name"
-                                    InputProps={{
-                                        disableUnderline: true,
-                                        className: classes.searchInput,
+                                <Autocomplete
+                                    options={this.props.availableClasses || []}
+                                    renderInput={(params) => {
+                                        params.InputProps.disableUnderline = true;
+                                        return (
+                                            <TextField
+                                                {...params}
+                                                fullWidth
+                                                placeholder="Class"
+                                            />);
                                     }}
+                                    onChange={this.onChangeSearchInput}
                                 />
                             </Grid>
                             <Grid item>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={this.doSearch}
+                                >
+                                    Find
+                                </Button>
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -98,16 +125,22 @@ class Students extends React.Component {
                                 >
                                     Add student
                                 </Button>
-                                <Tooltip title="Reload">
-                                    <IconButton>
-                                        <RefreshIcon className={classes.block} color="inherit"/>
-                                    </IconButton>
-                                </Tooltip>
+
                             </Grid>
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <StudentTable class={classes.table}/>
+                {Boolean(this.state.filteredStudents.length) && <StudentTable
+                    class={classes.table}
+                    filteredStudents={this.state.filteredStudents}
+                />}
+                {!Boolean(this.state.filteredStudents.length) &&
+                <div className={classes.contentWrapper}>
+                    <Typography color="textSecondary" align="center">
+                        No users found
+                    </Typography>
+                </div>
+                }
                 <InputForm
                     open={this.state.studentAddModalOpen}
                     handleClose={this.onAddStudentClose}
@@ -123,4 +156,12 @@ Students.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Students);
+const mapStateToProps = state => ({
+    availableClasses: state.students.availableClasses,
+    availableStudents: state.students.loaded
+});
+
+
+export default withStyles(styles)(
+    connect(mapStateToProps)(Students)
+);

@@ -4,13 +4,14 @@ from flask_api import status
 from matiushin_medvedev.backend import db
 from matiushin_medvedev.backend.db.student import Student
 from matiushin_medvedev.backend.web.controller_utils import response_to_json, request_to_json
+from matiushin_medvedev.backend.web.dto.student_schema import StudentRequestSchema
 
 student_controller = Blueprint('student_controller', __name__)
 
 
 @student_controller.route('/students/', methods=['POST'])
 def create_student():
-    request_body = request_to_json(request)
+    request_body = request_to_json(request, StudentRequestSchema())
     student = Student(request_body['name'],
                       request_body['surname'],
                       request_body['patronymic'],
@@ -37,7 +38,7 @@ def get_student(student_id):
 @student_controller.route('/students/<student_id>', methods=['PUT'])
 def update_student(student_id):
     student = Student.query.get_or_404(student_id)
-    request_body = request_to_json(request)
+    request_body = request_to_json(request, StudentRequestSchema())
     student.name = request_body['name']
     student.surname = request_body['surname']
     student.patronymic = request_body['patronymic']

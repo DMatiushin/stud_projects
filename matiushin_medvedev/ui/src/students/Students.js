@@ -31,7 +31,7 @@ const styles = (theme) => ({
     block: {
         display: 'block',
     },
-    addStudent: {
+    btn: {
         marginRight: theme.spacing(1),
     },
     contentWrapper: {
@@ -114,13 +114,14 @@ class Students extends React.Component {
                                     variant="contained"
                                     color="primary"
                                     onClick={this.doSearch}
+                                    className={classes.btn}
                                 >
                                     Find
                                 </Button>
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    className={classes.addStudent}
+                                    className={classes.btn}
                                     onClick={this.onAddStudentOpen}
                                 >
                                     Add student

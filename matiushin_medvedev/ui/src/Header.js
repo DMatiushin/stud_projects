@@ -2,20 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import HelpIcon from '@material-ui/icons/Help';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
 import {useLocation} from 'react-router-dom';
 import {menuItems} from './routerSettings';
-import * as path from "path";
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -39,6 +35,9 @@ const styles = (theme) => ({
     button: {
         borderColor: lightColor,
     },
+    header: {
+        marginBottom: theme.spacing(2)
+    }
 });
 
 function Header(props) {
@@ -67,11 +66,6 @@ function Header(props) {
                         </Hidden>
                         <Grid item xs/>
                         <Grid item>
-                            <Link className={classes.link} href="#" variant="body2">
-                                Go to docs
-                            </Link>
-                        </Grid>
-                        <Grid item>
                             <IconButton color="inherit" className={classes.iconButtonAvatar}>
                                 <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar"/>
                             </IconButton>
@@ -86,24 +80,12 @@ function Header(props) {
                 position="static"
                 elevation={0}
             >
-                <Toolbar>
+                <Toolbar className={classes.header}>
                     <Grid container alignItems="center" spacing={1}>
                         <Grid item xs>
                             <Typography color="inherit" variant="h5" component="h1">
                                 {title}
                             </Typography>
-                        </Grid>
-                        <Grid item>
-                            <Button className={classes.button} variant="outlined" color="inherit" size="small">
-                                Web setup
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Tooltip title="Help">
-                                <IconButton color="inherit">
-                                    <HelpIcon/>
-                                </IconButton>
-                            </Tooltip>
                         </Grid>
                     </Grid>
                 </Toolbar>

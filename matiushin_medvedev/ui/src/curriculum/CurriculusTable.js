@@ -61,7 +61,7 @@ class CurriculumTable extends React.Component {
 
         let curriculumToEdit;
         if (editModalOpen) {
-            const selectedCurriculum = this.props.loadedCurriculums
+            const selectedCurriculum = this.props.curriculums
                 .filter(std => std.id === this.state.curriculumToEdit)[0];
             curriculumToEdit = {
                 specName: selectedCurriculum.spec_name,
@@ -87,7 +87,7 @@ class CurriculumTable extends React.Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {this.props.loadedCurriculums.map((row) => (
+                            {this.props.curriculums.map((row) => (
                                 <TableRow key={row.id}>
                                     <TableCell component="th" scope="row">
                                         {row.spec_name}
@@ -153,8 +153,4 @@ class CurriculumTable extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    loadedCurriculums: state.curriculums.loaded
-});
-
-export default connect(mapStateToProps)(CurriculumTable);
+export default CurriculumTable;

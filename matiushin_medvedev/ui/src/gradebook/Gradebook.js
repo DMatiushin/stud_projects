@@ -155,8 +155,7 @@ class Gradebooks extends React.Component {
                     if (classFilteredGradebook.students_marks.length) {
                         console.log('classFilteredGradebook', classFilteredGradebook);
                         this.setState(() => ({
-                            //todo select year
-                            currentGradebook: filteredYearGradebook[0],
+                            currentGradebook: classFilteredGradebook,
                             currentDisciplineId: curriculumId
                         }));
                     } else {

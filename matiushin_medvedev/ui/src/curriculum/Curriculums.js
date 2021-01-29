@@ -7,13 +7,12 @@ import Grid from "@material-ui/core/Grid";
 import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import RefreshIcon from "@material-ui/icons/Refresh";
 import AppBar from "@material-ui/core/AppBar";
 import CurriculumTable from './CurriculusTable';
 import ModalInputForm from './Modal';
 import {addCurriculum, loadAllCurriculums} from '../api/curriculums';
+import {connect} from "react-redux";
+import Typography from "@material-ui/core/Typography";
 
 
 const styles = (theme) => ({
@@ -48,7 +47,8 @@ class Curriculums extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            curriculumAddModalOpen: false
+            curriculumAddModalOpen: false,
+            filteredCurriculums: props.loadedCurriculums
         };
         loadAllCurriculums();
     }
@@ -69,6 +69,17 @@ class Curriculums extends React.Component {
         addCurriculum(user);
     };
 
+    onSearchChange = ({target: {value}}) => {
+        const filtered = value
+            ? this.props.loadedCurriculums.filter(s => s.spec_name.includes(value) || s.discipline.includes(value))
+            : this.props.loadedCurriculums
+
+        console.log(filtered);
+        this.setState(() => ({
+            filteredCurriculums: filtered
+        }));
+    };
+
     render() {
         const {classes} = this.props;
         return (
@@ -82,11 +93,12 @@ class Curriculums extends React.Component {
                             <Grid item xs>
                                 <TextField
                                     fullWidth
-                                    placeholder="Search by name"
+                                    placeholder="Search"
                                     InputProps={{
                                         disableUnderline: true,
                                         className: classes.searchInput,
                                     }}
+                                    onChange={this.onSearchChange}
                                 />
                             </Grid>
                             <Grid item>
@@ -98,16 +110,24 @@ class Curriculums extends React.Component {
                                 >
                                     Add curriculum
                                 </Button>
-                                <Tooltip title="Reload">
-                                    <IconButton>
-                                        <RefreshIcon className={classes.block} color="inherit"/>
-                                    </IconButton>
-                                </Tooltip>
                             </Grid>
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <CurriculumTable class={classes.table}/>
+
+                {Boolean(this.state.filteredCurriculums.length) &&
+                <CurriculumTable
+                    class={classes.table}
+                    curriculums={this.state.filteredCurriculums}
+                />
+                }
+                {!Boolean(this.state.filteredCurriculums.length) &&
+                <div className={classes.contentWrapper}>
+                    <Typography color="textSecondary" align="center">
+                        No curriculums found
+                    </Typography>
+                </div>
+                }
                 <ModalInputForm
                     open={this.state.curriculumAddModalOpen}
                     handleClose={this.onAddCurriculumClose}
@@ -123,4 +143,10 @@ Curriculums.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Curriculums);
+const mapStateToProps = state => ({
+    loadedCurriculums: state.curriculums.loaded
+});
+
+export default withStyles(styles)(
+    connect(mapStateToProps)(Curriculums)
+);

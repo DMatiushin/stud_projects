@@ -1,7 +1,17 @@
 import React from 'react';
-import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@material-ui/core";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    MenuItem,
+    TextField
+} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {withStyles} from "@material-ui/core/styles";
+import {examinationForms} from "./common";
 
 const styles = (theme) => ({
     root: {
@@ -56,6 +66,7 @@ class ModalInputForm extends React.Component {
     };
 
     render() {
+        console.log('This state', this.state);
         return (
             <Dialog
                 open={this.props.open}
@@ -65,42 +76,59 @@ class ModalInputForm extends React.Component {
                 <DialogTitle id="form-dialog-title">Curriculum</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        To subscribe to this website, please enter your email address here. We will send updates
-                        occasionally.
+                        Please, enter curriculum
                     </DialogContentText>
                     <form noValidate autoComplete="off">
-                        <div className={this.props.classes.root}>
-                            <TextField
-                                margin="dense"
-                                label="Specialty name"
-                                type="text"
-                                value={this.state.specName}
-                                onChange={this.handleSpecName}
-                            />
-                            <TextField
-                                margin="dense"
-                                label="Discipline"
-                                type="text"
-                                value={this.state.discipline}
-                                onChange={this.handleDiscipline}
-                            />
-                        </div>
-                        <div className={this.props.classes.root}>
-                            <TextField
-                                margin="dense"
-                                label="Hours"
-                                type="text"
-                                value={this.state.hours}
-                                onChange={this.handleHours}
-                            />
-                            <TextField
-                                margin="dense"
-                                label="Examination form"
-                                type="text"
-                                value={this.state.examinationForm}
-                                onChange={this.handleExamForm}
-                            />
-                        </div>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="Specialty name"
+                                    type="text"
+                                    value={this.state.specName}
+                                    onChange={this.handleSpecName}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="Discipline"
+                                    type="text"
+                                    value={this.state.discipline}
+                                    onChange={this.handleDiscipline}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="Hours"
+                                    type="text"
+                                    value={this.state.hours}
+                                    onChange={this.handleHours}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    select
+                                    margin="dense"
+                                    label="Specialty name"
+                                    type="text"
+                                    value={this.state.examinationForm}
+                                    onChange={this.handleExamForm}
+                                >
+                                    {examinationForms.map((form) => (
+                                        <MenuItem key={form.value} value={form.value}>
+                                            {form.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+
+                            </Grid>
+                        </Grid>
                     </form>
                 </DialogContent>
                 <DialogActions>

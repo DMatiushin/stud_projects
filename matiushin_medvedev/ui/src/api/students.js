@@ -9,6 +9,11 @@ export const loadAllStudents = () => {
         );
 };
 
+export const countByEducationalForm = async (form) => {
+    return await fetch(`http://localhost:5000/students/count?education_form=${form}`)
+        .then(j => j.json());
+};
+
 export const addStudent = async (student) => {
     await fetch('http://localhost:5000/students/', {
         method: 'POST',

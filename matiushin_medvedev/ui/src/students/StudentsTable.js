@@ -23,17 +23,20 @@ import InputForm from './ModalInputForm';
 
 class StudentTable extends React.Component {
 
+    educationalFormCount = new Map();
 
     constructor(props, context) {
         super(props, context);
         this.state = {
             studentToDelete: -1,
-            studentToEdit: -1
+            studentToEdit: -1,
         };
+        this.educationalFormCount.set('FULL_COUNT', props.fullTimeCount);
+        this.educationalFormCount.set('PART_TIME', props.partTimeCount);
+        this.educationalFormCount.set('EVENING', props.eveningCount);
     }
 
     deleteStudent = async () => {
-        console.log(`Remove student by id ${this.state.studentToDelete}`);
         await deleteStudent(this.state.studentToDelete);
         this.onCloseModal();
     };
@@ -102,11 +105,11 @@ class StudentTable extends React.Component {
                                     <TableCell>{row.patronymic}</TableCell>
                                     <TableCell>{row.entry_date}</TableCell>
                                     <TableCell>{row.group_num}</TableCell>
-                                    <TableCell>{
-                                        educationalForms
+                                    <TableCell>
+                                        {educationalForms
                                             .filter(entry => entry.value === row.education_form)[0]
-                                            .label
-                                    }</TableCell>
+                                            .label} (Total: {this.educationalFormCount.get(row.education_form)})
+                                    </TableCell>
                                     <TableCell>
                                         <IconButton
                                             aria-label="delete"

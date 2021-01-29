@@ -74,7 +74,6 @@ class Curriculums extends React.Component {
             ? this.props.loadedCurriculums.filter(s => s.spec_name.includes(value) || s.discipline.includes(value))
             : this.props.loadedCurriculums
 
-        console.log(filtered);
         this.setState(() => ({
             filteredCurriculums: filtered
         }));

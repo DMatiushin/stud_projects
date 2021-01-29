@@ -66,7 +66,6 @@ class ModalInputForm extends React.Component {
     };
 
     render() {
-        console.log('This state', this.state);
         return (
             <Dialog
                 open={this.props.open}

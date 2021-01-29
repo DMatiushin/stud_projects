@@ -1,19 +1,18 @@
 import React from 'react';
-import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@material-ui/core";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    MenuItem,
+    TextField
+} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import {withStyles} from "@material-ui/core/styles";
-
-const styles = (theme) => ({
-    root: {
-        '& .MuiTextField-root': {
-            margin: theme.spacing(1),
-            width: 150,
-        },
-    },
-});
+import {educationalForms} from "./common";
 
 class ModalInputForm extends React.Component {
-
 
     constructor(props) {
         super(props);
@@ -23,7 +22,7 @@ class ModalInputForm extends React.Component {
             firstName: initial.firstName || '',
             secondName: initial.secondName || '',
             patronymic: initial.patronymic || '',
-            entryDate: initial.entryDate || '',
+            entryDate: initial.entryDate ? initial.entryDate.slice(0, 10) : '',
             educationForm: initial.educationForm || '',
             class: initial.class || ''
         }
@@ -71,7 +70,7 @@ class ModalInputForm extends React.Component {
     };
 
     render() {
-        console.log('Props', this.props);
+        console.log('Modal input form state', this.state);
         return (
             <Dialog
                 open={this.props.open}
@@ -85,52 +84,80 @@ class ModalInputForm extends React.Component {
                         occasionally.
                     </DialogContentText>
                     <form noValidate autoComplete="off">
-                        <div className={this.props.classes.root}>
-                            <TextField
-                                margin="dense"
-                                label="First name"
-                                type="text"
-                                value={this.state.firstName}
-                                onChange={this.handleFirstName}
-                            />
-                            <TextField
-                                margin="dense"
-                                label="Second name"
-                                type="text"
-                                value={this.state.secondName}
-                                onChange={this.handleSecondName}
-                            />
-                            <TextField
-                                margin="dense"
-                                label="Patronymic"
-                                type="text"
-                                value={this.state.patronymic}
-                                onChange={this.handlePatronymic}
-                            />
-                        </div>
-                        <div className={this.props.classes.root}>
-                            <TextField
-                                margin="dense"
-                                label="Entry date"
-                                type="text"
-                                value={this.state.entryDate}
-                                onChange={this.handleEntryDate}
-                            />
-                            <TextField
-                                margin="dense"
-                                label="Education form"
-                                type="text"
-                                value={this.state.educationForm}
-                                onChange={this.handleEducationForm}
-                            />
-                            <TextField
-                                margin="dense"
-                                label="Class"
-                                type="text"
-                                value={this.state.class}
-                                onChange={this.handleClass}
-                            />
-                        </div>
+                        <Grid container spacing={2}>
+                            <Grid item xs={4}>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="First name"
+                                    type="text"
+                                    value={this.state.firstName}
+                                    onChange={this.handleFirstName}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="Second name"
+                                    type="text"
+                                    value={this.state.secondName}
+                                    onChange={this.handleSecondName}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="Patronymic"
+                                    type="text"
+                                    value={this.state.patronymic}
+                                    onChange={this.handlePatronymic}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2}>
+                            <Grid item xs={4}>
+                                <TextField
+                                    fullWidth
+                                    label="Entry date"
+                                    type="date"
+                                    defaultValue="2017-05-24"
+                                    value={this.state.entryDate}
+                                    onChange={this.handleEntryDate}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    fullWidth
+                                    select
+                                    margin="dense"
+                                    label="Educational form"
+                                    type="text"
+                                    value={this.state.educationForm}
+                                    onChange={this.handleEducationForm}
+                                >
+                                    {educationalForms.map((entry) => (
+                                        <MenuItem key={entry.value} value={entry.value}>
+                                            {entry.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    fullWidth
+                                    margin="dense"
+                                    label="Class"
+                                    type="text"
+                                    value={this.state.class}
+                                    onChange={this.handleClass}
+                                />
+                            </Grid>
+                        </Grid>
                     </form>
                 </DialogContent>
                 <DialogActions>
@@ -146,4 +173,4 @@ class ModalInputForm extends React.Component {
     }
 }
 
-export default withStyles(styles)(ModalInputForm);
+export default ModalInputForm;

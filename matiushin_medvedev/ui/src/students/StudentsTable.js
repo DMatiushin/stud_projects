@@ -17,7 +17,7 @@ import Table from "@material-ui/core/Table";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import {connect} from 'react-redux';
+import {educationalForms} from './common';
 import {deleteStudent, updateStudent} from '../api/students';
 import InputForm from './ModalInputForm';
 
@@ -63,7 +63,7 @@ class StudentTable extends React.Component {
 
         let studentToEdit;
         if (editStudentModalOpen) {
-            const selectedStudent = this.props.loadedStudents
+            const selectedStudent = this.props.filteredStudents
                 .filter(std => std.id === this.state.studentToEdit)[0];
             studentToEdit =  {
                 firstName: selectedStudent.name,
@@ -86,14 +86,14 @@ class StudentTable extends React.Component {
                                 <TableCell>First name</TableCell>
                                 <TableCell>Patronymic</TableCell>
                                 <TableCell>Entry date</TableCell>
-                                <TableCell>Education form</TableCell>
                                 <TableCell>Class</TableCell>
+                                <TableCell>Education form</TableCell>
                                 <TableCell/>
                                 <TableCell/>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {this.props.loadedStudents.map((row) => (
+                            {this.props.filteredStudents.map((row) => (
                                 <TableRow key={row.id}>
                                     <TableCell component="th" scope="row">
                                         {row.surname}
@@ -102,7 +102,11 @@ class StudentTable extends React.Component {
                                     <TableCell>{row.patronymic}</TableCell>
                                     <TableCell>{row.entry_date}</TableCell>
                                     <TableCell>{row.group_num}</TableCell>
-                                    <TableCell>{row.education_form}</TableCell>
+                                    <TableCell>{
+                                        educationalForms
+                                            .filter(entry => entry.value === row.education_form)[0]
+                                            .label
+                                    }</TableCell>
                                     <TableCell>
                                         <IconButton
                                             aria-label="delete"
@@ -159,8 +163,4 @@ class StudentTable extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    loadedStudents: state.students.loaded
-});
-
-export default connect(mapStateToProps)(StudentTable);
+export default StudentTable;

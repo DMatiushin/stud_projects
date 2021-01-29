@@ -61,8 +61,7 @@ class ModalInput extends React.Component {
                 <DialogTitle id="form-dialog-title">Create a gradebook</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        To subscribe to this website, please enter your email address here. We will send updates
-                        occasionally.
+                        Please, enter class and discipline names.
                     </DialogContentText>
                     <form noValidate autoComplete="off">
                         <div className={this.props.classes.root}>
